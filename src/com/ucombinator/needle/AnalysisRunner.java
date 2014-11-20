@@ -29,10 +29,11 @@ public class AnalysisRunner {
 		System.out.println("ran from: " + System.getProperty("user.dir") + " with args: [" + String.join(", ", args) + "]");
 		
 		if (args.length < 2) {
+			String cmd = "  java -classpath ... com.ucombinator.needle.AnalysisRunner";
 			System.out.println("USAGE: ");
-			System.out.println("  java needle-flow.jar <path/to/android/platforms> <path/to/apk>");
-			System.out.println("Example: ");
-			System.out.println("  java needle-flow.jar ../android-sdk/platforms/ ../needle/data/apps/source/AppName/AppName.apk");
+			System.out.println(cmd + "<path/to/android/platforms> <path/to/apk>");
+			System.out.println("EXAMPLE: ");
+			System.out.println(cmd + " ../android-sdk/platforms/ ../needle/data/apps/source/AppName/AppName.apk");
 			System.out.println("(In eclipse, create a run configuration with arguments for convenience)");
 			return;
 		}

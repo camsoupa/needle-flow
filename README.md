@@ -121,7 +121,7 @@ Soot runs things called packs.  Don't worry about these for now.
 ## The current code
 - For now, the code just gets the callers in the call graph and performs a SourceSinkFlowAnalysis on the method body.  
 
-- The analysis is just placeholder and really just checks for stmts in branches (See ```SourceSinkFlowAnalysis.generateFlow```), but it is an attempt to discover how the flow is propogated from the in and out sets (see ```SourceSinkFlowAnalysis.flowsThrough```).  I am not exactly sure how it works yet, but stmts can either create flow or end it.  For instance, a backward analysis from sinks to sources could create flw if the stmt is a sink.  If we see a sink entry in the After (or Before?) set of a stmt that we tag as a source, then we have found an explicit flow.
+- The analysis is just placeholder and really just checks for stmts in branches (See ```SourceSinkFlowAnalysis.generateFlow```), but it is an attempt to discover how the flow is propogated from the in and out sets (see ```SourceSinkFlowAnalysis.flowsThrough```).  I am not exactly sure how it works yet, but stmts can either create flow or end it.  For instance, a backward analysis from sinks to sources could create flow if the stmt is a sink.  If we see a sink entry in the After (or Before?) set of a stmt that we tag as a source, then we have found an explicit flow.
 
 ## Target output format of source sink flows
 

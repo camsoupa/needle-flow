@@ -26,14 +26,19 @@ import soot.toolkits.graph.UnitGraph;
 
 public class AnalysisRunner {
 	public static void main(String[] args) {
-		System.out.println("Working Directory = " +
-	              System.getProperty("user.dir"));
-		//PackManager.v().getPack("wjtp").add(new Transform("SourceSinkFlowAnalysis",
-		//	SourceSinkFlowAnalysis.instance()));
-		System.out.println(args);
-		//String apk = args[1];
-		String androidJars = "/home/cam/dev/android-platforms";
-		String apk = "Memotis.apk";
+		System.out.println("ran from: " + System.getProperty("user.dir") + " with args: [" + String.join(", ", args) + "]");
+		
+		if (args.length < 2) {
+			System.out.println("USAGE: ");
+			System.out.println("  java needle-flow.jar <path/to/android/platforms> <path/to/apk>");
+			System.out.println("Example: ");
+			System.out.println("  java needle-flow.jar ../android-sdk/platforms/ ../needle/data/apps/source/AppName/AppName.apk");
+			System.out.println("(In eclipse, create a run configuration with arguments for convenience)");
+			return;
+		}
+		
+		String androidJars = args[0];
+		String apk = args[1];
 		Options.v().set_no_bodies_for_excluded(true);
 		Options.v().set_process_dir(Collections.singletonList(apk));
 		Options.v().set_src_prec(Options.src_prec_apk);

@@ -40,25 +40,36 @@ public class AnalysisRunner {
 		
 		String androidJars = args[0];
 		String apk = args[1];
+		
+		/* Soot options */
 		Options.v().set_no_bodies_for_excluded(true);
+		/* Set the apk to process */
 		Options.v().set_process_dir(Collections.singletonList(apk));
+		/* The source bytecode is an android apk */
 		Options.v().set_src_prec(Options.src_prec_apk);
+		/* The android libs to compile against (it will choose the proper one from the AndroidManifest.xml */
 		Options.v().set_android_jars(androidJars);
+		/* We are not outputting a code transformation */
 		Options.v().set_output_format(Options.output_format_none);
+		/* For callgraph, we need whole program */
 		Options.v().set_whole_program(true);
+		/* Called methods without jar files or source are considered phantom.  This is ok. */
 		Options.v().set_allow_phantom_refs(true);
 		String classPath = /*"/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar" +
 						":/usr/lib/jvm/java-8-oracle/jre/lib/jce.jar:" + */
 						Scene.v().getAndroidJarPath(androidJars, apk);
 		Options.v().set_soot_classpath(classPath);
+		/* Apply these options */
 		Main.v().autoSetOptions();
-
+        /* This will parse the apk file into soot classes */
 		Scene.v().loadNecessaryClasses();	
 		
+		/* The callgraph phase options */
         Options.v().setPhaseOption("cg.spark", "on");
         Options.v().setPhaseOption("cg.spark", "verbose:true");
+        /* assume all methods are reachable to avoid setting explicit entry points */
         Options.v().setPhaseOption("cg", "all-reachable:true");
-
+        /*
 		Transform transform = new Transform("wjtp.Callgraph", new SceneTransformer() {
 			@Override
 			protected void internalTransform(String phaseName, Map options) {
@@ -66,10 +77,14 @@ public class AnalysisRunner {
 				getCallers();
 			}
 		});
+		*/
 		//PackManager.v().getPack("wjtp").add(transform);
-		PackManager.v().getPack("cg").apply();
 		//PackManager.v().getPack("wjtp").apply();
+        
+        /* run the callgraph builder */
+        PackManager.v().getPack("cg").apply();
 
+        /* get the in-app caller methods from the callgraph (exclude library callers ) */
 		Iterator<SootMethod> callers = getCallers();
 		
 		while(callers.hasNext()) {
@@ -87,21 +102,8 @@ public class AnalysisRunner {
 				System.out.println("  Before: " + before.toString());
 				System.out.println("  After: " + after.toString()); 
 			}
+			/* TODO store the results for each method and combine them to get full app data flow */
 		}
-		/*
-		// Retrieve the method and its body
-
-		// Build the CFG and run the analysis
-
-		// Iterate over the results
-		Iterator i = g.iterator();
-		while (i.hasNext()) {
-			Unit u = (Unit)i.next();
-			List IN = exprs.getSourceSinkFlowExprsBefore(u);
-			List OUT = exprs.getSourceSinkFlowExprsAfter(u);
-			// Do something clever with the results
-		}*/
-
 	}
 	
 	public static Iterator<SootMethod> getCallers() {

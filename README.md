@@ -43,7 +43,8 @@ A data flow analyzer for (eventual) use with [needle](https://github.com/camsoup
 ## IMPORT needle-flow ECLIPSE PROJECT INTO YOUR ECLIPSE WORKSPACE
 
 - In eclipse, choose File -> Import -> General -> Existing Project Into Workspace
-- Navigate to needle-flow directory
+- Browse to and select needle-flow directory and select OK.
+- You should then see a needle-flow project in the "Projects" list.
 - Do NOT select "Copy into Workspace".  It should be left in the needle-flow directory.
 
 ## CHECK FOLDER STRUCTURE

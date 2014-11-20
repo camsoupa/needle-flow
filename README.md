@@ -3,6 +3,8 @@ needle-flow
 
 A data flow analyzer for (eventual) use with [needle](https://github.com/camsoupa/needle).
 
+## CLONE THIS REPO
+
 ## GET JAVA
 
 - java-8-oracle is best (other versions may work, but have not tested)
@@ -40,7 +42,8 @@ A data flow analyzer for (eventual) use with [needle](https://github.com/camsoup
 
 ## IMPORT needle-flow ECLIPSE PROJECT INTO YOUR ECLIPSE WORKSPACE
 
-- In eclipse, choose File -> Import -> Existing Project Into Workspace
+- In eclipse, choose File -> Import -> General -> Existing Project Into Workspace
+- Navigate to needle-flow directory
 - Do NOT select "Copy into Workspace".  It should be left in the needle-flow directory.
 
 ## CHECK FOLDER STRUCTURE

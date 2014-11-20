@@ -78,3 +78,10 @@ jasmin/
 soot/
 ```
 
+## Run needle-flow from eclipse
+
+- Create a run configuration by clickong on the small down arrow to the right green play arrow.
+- Select "Run Configrations..." 
+- Create a run configuration with arguments for: <path/to/android-platforms> <path/to/apk>
+
+

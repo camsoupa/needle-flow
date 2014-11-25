@@ -57,6 +57,8 @@ public class AnalysisRunner {
 		Options.v().set_whole_program(true);
 		/* Called methods without jar files or source are considered phantom */
 		Options.v().set_allow_phantom_refs(true);
+		
+		Options.v().set_dump_cfg(Collections.singletonList("cg"));
 		String classPath = Scene.v().getAndroidJarPath(androidJars, apk);
 		Options.v().set_soot_classpath(classPath);
 		/* Apply these options */

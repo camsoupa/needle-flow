@@ -7,10 +7,10 @@ import java.util.Map;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Sets;
 
 import soot.Body;
 import soot.Main;
-
 import soot.PackManager;
 import soot.Scene;
 import soot.SceneTransformer;
@@ -40,24 +40,24 @@ public class AnalysisRunner {
 		
 		String androidJars = args[0];
 		String apk = args[1];
-		
+		Options.v().set_verbose(true);
 		/* Soot options */
 		Options.v().set_no_bodies_for_excluded(true);
 		/* Set the apk to process */
 		Options.v().set_process_dir(Collections.singletonList(apk));
 		/* The source bytecode is an android apk */
 		Options.v().set_src_prec(Options.src_prec_apk);
+		/* we need to link instructions to source line for display */
+		Options.v().set_keep_line_number(true);
 		/* The android libs to compile against (it will choose the proper one from the AndroidManifest.xml */
 		Options.v().set_android_jars(androidJars);
 		/* We are not outputting a code transformation */
 		Options.v().set_output_format(Options.output_format_none);
 		/* For callgraph, we need whole program */
 		Options.v().set_whole_program(true);
-		/* Called methods without jar files or source are considered phantom.  This is ok. */
+		/* Called methods without jar files or source are considered phantom */
 		Options.v().set_allow_phantom_refs(true);
-		String classPath = /*"/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar" +
-						":/usr/lib/jvm/java-8-oracle/jre/lib/jce.jar:" + */
-						Scene.v().getAndroidJarPath(androidJars, apk);
+		String classPath = Scene.v().getAndroidJarPath(androidJars, apk);
 		Options.v().set_soot_classpath(classPath);
 		/* Apply these options */
 		Main.v().autoSetOptions();
@@ -65,26 +65,13 @@ public class AnalysisRunner {
 		Scene.v().loadNecessaryClasses();	
 		
 		/* The callgraph phase options */
-        Options.v().setPhaseOption("cg.spark", "on");
-        Options.v().setPhaseOption("cg.spark", "verbose:true");
         /* assume all methods are reachable to avoid setting explicit entry points */
         Options.v().setPhaseOption("cg", "all-reachable:true");
-        /*
-		Transform transform = new Transform("wjtp.Callgraph", new SceneTransformer() {
-			@Override
-			protected void internalTransform(String phaseName, Map options) {
-				System.out.println("INTERNAL_TRANSFORM");
-				getCallers();
-			}
-		});
-		*/
-		//PackManager.v().getPack("wjtp").add(transform);
-		//PackManager.v().getPack("wjtp").apply();
         
         /* run the callgraph builder */
         PackManager.v().getPack("cg").apply();
 
-        /* get the in-app caller methods from the callgraph (exclude library callers ) */
+        /* get the in-app caller methods from the callgraph (excludes library callers ) */
 		Iterator<SootMethod> callers = getCallers();
 		
 		while(callers.hasNext()) {
@@ -111,12 +98,12 @@ public class AnalysisRunner {
 		Iterator<Edge> sources = cg.listener();
 		Iterator<Edge> appMethods = Iterators.filter(sources, new Predicate<Edge>() {
 			public boolean apply(Edge e) {
+				System.out.println(e.src());
 				return !e.src().isJavaLibraryMethod() && !e.src().method().getDeclaringClass().isLibraryClass();
 			}
 		});
 		
 		Iterator<SootMethod> callers = new Sources(appMethods);
-		return callers;
-		
+		return Sets.newHashSet(callers).iterator();
 	}
 }

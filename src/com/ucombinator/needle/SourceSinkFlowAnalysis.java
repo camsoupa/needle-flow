@@ -23,9 +23,9 @@ public class SourceSinkFlowAnalysis extends BackwardFlowAnalysis<Unit, Set<Unit>
 
 	@Override
 	protected void flowThrough(Set<Unit> in, Unit unit, Set<Unit> out) {
-		System.out.println("flowThru: " + unit.toString());
-		System.out.println("USES: " + unit.getUseBoxes());
-		System.out.println("DEFS: " + unit.getDefBoxes());
+		System.out.println("    flowThru: " + unit.toString());
+		System.out.println("      USES: " + unit.getUseBoxes());
+		System.out.println("      DEFS: " + unit.getDefBoxes());
 
 		/* passes flow thru */
 		out.clear();

@@ -1,7 +1,62 @@
 needle-flow
 ==========
 
-A data flow analyzer for (eventual) use with [needle](https://github.com/camsoupa/needle).
+## TO USE
+
+1. Add the exported jar as an external archive to your analysis project.
+2. Get the android-sdk as described below.
+
+```
+package com.ucombinator.needle.main;
+
+import java.util.Iterator;
+
+import soot.SootClass;
+import soot.SootMethod;
+
+import com.ucombinator.needle.SootAndroidApp;
+
+public class AnalysisRunner {
+	public static void main(String[] args) {
+		printRunInfo(args);
+		if (args.length < 2) {
+		  printUsage(args);
+		}
+		
+		String androidJars = args[0];
+		String apk = args[1];
+		
+		SootAndroidApp.init(androidJars, apk);
+
+        /* get the in-app caller methods from the callgraph (excludes library callers ) */
+		Iterator<SootMethod> callers = SootAndroidApp.getInternalCallers();
+		while(callers.hasNext()) {
+			System.out.println(callers.next());
+		}
+		
+		for(SootClass clazz :  SootAndroidApp.getAst()) {
+			System.out.println(clazz);
+		}
+		
+		System.out.println(SootAndroidApp.getCallGraph());
+	}
+
+	private static void printRunInfo(String[] args) {
+		System.out.println("ran from: " + System.getProperty("user.dir") + " with args: [" + String.join(", ", args) + "]");
+	}
+
+	private static void printUsage(String[] args) {
+		String cmd = "  java -classpath ... com.ucombinator.needle.AnalysisRunner";
+		System.out.println("USAGE: ");
+		System.out.println(cmd + "<path/to/android/platforms> <path/to/apk>");
+		System.out.println("EXAMPLE: ");
+		System.out.println(cmd + " ../android-sdk/platforms ../needle/data/apps/source/AppName/AppName.apk");
+		System.out.println("(In eclipse, create a run configuration with arguments for convenience)");
+	}
+}
+```
+
+## TO BUILD
 
 See: https://github.com/Sable/soot/wiki/Building-Soot-with-Eclipse for instructions on how to get soot working in eclipse
 

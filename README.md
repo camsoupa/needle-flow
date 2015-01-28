@@ -3,6 +3,8 @@ needle-flow
 
 A data flow analyzer for (eventual) use with [needle](https://github.com/camsoupa/needle).
 
+See: https://github.com/Sable/soot/wiki/Building-Soot-with-Eclipse for instructions on how to get soot working in eclipse
+
 ## CLONE THIS REPO
 
 ## GET JAVA

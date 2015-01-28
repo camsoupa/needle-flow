@@ -6,6 +6,10 @@ needle-flow
 1. Add the exported jar as an external archive to your analysis project.
 2. Get the android-sdk as described below.
 
+
+The following program could be run with arguments:
+  ../android-sdk/platforms test/1.apk
+
 ```
 package com.ucombinator.needle.main;
 
